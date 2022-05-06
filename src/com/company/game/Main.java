@@ -1,7 +1,5 @@
 package com.company.game;
 
-import javax.swing.*;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -9,5 +7,7 @@ public class Main {
         MyPanel panel = new MyPanel();
         // Затем окно
         new GameWindow(panel);
+        // Запускаем фоновую музыку
+        Sound.playLaughter();
     }
 }

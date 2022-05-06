@@ -52,6 +52,7 @@ public class MyPanel extends JPanel {
                 boolean is_drop = x >= bomb_left && x <= drop_right && y >= bomb_top && y <= drop_bottom;
                 if (is_drop){
                     isExplosion = true;
+                    Sound.playExplosion();
                 }
                 score++;
             }
@@ -60,10 +61,12 @@ public class MyPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g){
-        if (score >= 5){
+        if (score >= 10){
             g.drawImage(game_success, 0, 0, null);
+            Sound.playWin();
         } else if (bomb_top > 768) {
             g.drawImage(game_over, 0, 0, null);
+            Sound.playLaughter();
         } else {
             bomb_top += 5; // drop_top = drop_top + 5;
             g.drawImage(background, 0, 0, null);
