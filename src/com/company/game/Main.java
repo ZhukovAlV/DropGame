@@ -10,6 +10,8 @@ public class Main {
         MyPanel panel = new MyPanel();
         // Затем окно
         new GameWindow(panel);
+        // Запускаем звуковую дорожку
+        Sound.playLaughter();
     }
 
 
