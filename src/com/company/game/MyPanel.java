@@ -19,10 +19,10 @@ public class MyPanel extends JPanel {
     // Картинка окончания игры
     private static Image game_over;
 
-    // Капля
+    // Бомба
     private static Image bomb;
-    private static int drop_left = 200;
-    private static int drop_top = 0;
+    private static int bomb_left = 200;
+    private static int bomb_top = 0;
 
 
     public MyPanel() {
@@ -41,9 +41,9 @@ public class MyPanel extends JPanel {
                 int x = e.getX();
                 int y = e.getY();
                 //System.out.println("x: " + x + " y: " + y);
-                float drop_right = drop_left + bomb.getWidth(null);
-                float drop_bottom = drop_top + bomb.getHeight(null);
-                boolean is_drop = x >= drop_left && x <= drop_right && y >= drop_top && y <= drop_bottom;
+                float drop_right = bomb_left + bomb.getWidth(null);
+                float drop_bottom = bomb_top + bomb.getHeight(null);
+                boolean is_drop = x >= bomb_left && x <= drop_right && y >= bomb_top && y <= drop_bottom;
                 if (is_drop){
                     isExplosion = true;
                 }
@@ -53,15 +53,15 @@ public class MyPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g){
-        drop_top += 5; // drop_top = drop_top + 5;
+        bomb_top += 5; // drop_top = drop_top + 5;
         g.drawImage(background, 0, 0, null);
-        g.drawImage(bomb, drop_left, drop_top, null);
+        g.drawImage(bomb, bomb_left, bomb_top, null);
         if (isExplosion) {
-            g.drawImage(explosion, drop_left, drop_top, null);
+            g.drawImage(explosion, bomb_left, bomb_top, null);
         }
 
         try {
-            Thread.sleep(50);
+            Thread.sleep(20);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -69,8 +69,8 @@ public class MyPanel extends JPanel {
 
         if (isExplosion) {
             isExplosion = false;
-            drop_top = -100;
-            drop_left = (int) (Math.random() * (getWidth() - bomb.getWidth(null)));
+            bomb_top = -100;
+            bomb_left = (int) (Math.random() * (getWidth() - bomb.getWidth(null)));
         }
     }
 }
