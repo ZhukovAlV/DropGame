@@ -16,19 +16,25 @@ public class MyPanel extends JPanel {
     private static Image explosion;
     private static boolean isExplosion;
 
-    // Картинка окончания игры
+    // Картинка неуспешного окончания игры
     private static Image game_over;
+
+    // Картинка успешного окончания игры
+    private static Image game_success;
 
     // Бомба
     private static Image bomb;
     private static int bomb_left = 200;
     private static int bomb_top = 0;
 
+    // Очки
+    private static int score;
 
     public MyPanel() {
         try {
             background = ImageIO.read(GameWindow.class.getResourceAsStream("background.jpg"));
             game_over = ImageIO.read(GameWindow.class.getResourceAsStream("game-over.jpg"));
+            game_success = ImageIO.read(GameWindow.class.getResourceAsStream("you-win.jpg"));
             bomb = ImageIO.read(GameWindow.class.getResourceAsStream("bomb.jpg"));
             explosion = ImageIO.read(GameWindow.class.getResourceAsStream("explosion.png"));
         } catch (IOException | IllegalArgumentException e) {
@@ -47,30 +53,37 @@ public class MyPanel extends JPanel {
                 if (is_drop){
                     isExplosion = true;
                 }
+                score++;
             }
         });
     }
 
     @Override
     protected void paintComponent(Graphics g){
-        bomb_top += 5; // drop_top = drop_top + 5;
-        g.drawImage(background, 0, 0, null);
-        g.drawImage(bomb, bomb_left, bomb_top, null);
-        if (isExplosion) {
-            g.drawImage(explosion, bomb_left, bomb_top, null);
-        }
+        if (score >= 5){
+            g.drawImage(game_success, 0, 0, null);
+        } else if (bomb_top > 768) {
+            g.drawImage(game_over, 0, 0, null);
+        } else {
+            bomb_top += 5; // drop_top = drop_top + 5;
+            g.drawImage(background, 0, 0, null);
+            g.drawImage(bomb, bomb_left, bomb_top, null);
+            if (isExplosion) {
+                g.drawImage(explosion, bomb_left, bomb_top, null);
+            }
 
-        try {
-            Thread.sleep(20);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        repaint();
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            repaint();
 
-        if (isExplosion) {
-            isExplosion = false;
-            bomb_top = -100;
-            bomb_left = (int) (Math.random() * (getWidth() - bomb.getWidth(null)));
+            if (isExplosion) {
+                isExplosion = false;
+                bomb_top = -100;
+                bomb_left = (int) (Math.random() * (getWidth() - bomb.getWidth(null)));
+            }
         }
     }
 }
