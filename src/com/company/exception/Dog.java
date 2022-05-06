@@ -11,10 +11,12 @@ public class Dog {
         this.name = name;
     }
 
-    public static void main(String[] args) throws DogIsNotReadyException {
+    public static void main(String[] args) throws InterruptedException {
         Dog dog = new Dog("Мухтар");
+
         dog.putCollar();
         dog.putMuzzle();
+
         dog.walk();//Unhandled exception: DogIsNotReadyException
     }
 
@@ -35,13 +37,18 @@ public class Dog {
         this.isMuzzlePutOn = true;
     }
 
-    public void walk() throws DogIsNotReadyException {
+    public void walk() throws InterruptedException {
 
         System.out.println("Собираемся на прогулку!");
         if (isCollarPutOn && isLeashPutOn && isMuzzlePutOn) {
             System.out.println("Ура, идем гулять! " + name + " очень рад!");
         } else {
-            throw new DogIsNotReadyException("Собака " + name + " не готова к прогулке! Проверьте экипировку!");
+            // throw new DogIsNotReadyException("Собака " + name + " не готова к прогулке! Проверьте экипировку!");
+            System.out.println("Собака " + name + " не готова к прогулке! Проверьте экипировку!");
+        }
+
+        while(true) {
+            System.out.println("Собака гуляет");
         }
     }
 
