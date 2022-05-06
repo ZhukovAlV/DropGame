@@ -19,9 +19,9 @@ public class MyPanel extends JPanel {
 
     public MyPanel() {
         try {
-            background = ImageIO.read(GameWindow.class.getResourceAsStream("background.png"));
+            background = ImageIO.read(GameWindow.class.getResourceAsStream("background.jpg"));
             game_over = ImageIO.read(GameWindow.class.getResourceAsStream("game_over.png"));
-            drop = ImageIO.read(GameWindow.class.getResourceAsStream("drop.png"));
+            drop = ImageIO.read(GameWindow.class.getResourceAsStream("bomb.jpg"));
         } catch (IOException e) {
             System.out.println("Случилось исключение. Файл картинки не найден или поврежден");
         }
