@@ -12,7 +12,7 @@ public class MyPanel extends JPanel {
     // Картинка фона
     private static Image background;
 
-    // Картинка фона
+    // Картинка взрыва
     private static Image explosion;
     private static boolean isExplosion;
 
