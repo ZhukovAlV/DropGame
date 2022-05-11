@@ -14,7 +14,6 @@ public class MyPanel extends JPanel {
 
     // Картинка взрыва
     private static Image explosion;
-    private static boolean isExplosion;
 
     // Картинка неуспешного окончания игры
     private static Image game_over;
@@ -23,19 +22,23 @@ public class MyPanel extends JPanel {
     private static Image game_success;
 
     // Бомба
-    private static Image bomb;
-    private static int bomb_left = 200;
-    private static int bomb_top = 0;
+    private static Bomb[] bombs = new Bomb[5];
 
     // Очки
     private static int score;
+
+    // Воспроизведение звука
+    private static boolean isSound;
 
     public MyPanel() {
         try {
             background = ImageIO.read(GameWindow.class.getResourceAsStream("background.jpg"));
             game_over = ImageIO.read(GameWindow.class.getResourceAsStream("game-over.jpg"));
             game_success = ImageIO.read(GameWindow.class.getResourceAsStream("you-win.jpg"));
-            bomb = ImageIO.read(GameWindow.class.getResourceAsStream("bomb.jpg"));
+
+            for (int i = 0; i < bombs.length; i++) {
+                bombs[i] = new Bomb(ImageIO.read(GameWindow.class.getResourceAsStream("bomb.jpg")));
+            }
             explosion = ImageIO.read(GameWindow.class.getResourceAsStream("explosion.png"));
         } catch (IOException | IllegalArgumentException e) {
             System.out.println("Случилось исключение. Файл картинки не найден или поврежден");
@@ -47,46 +50,55 @@ public class MyPanel extends JPanel {
                 int x = e.getX();
                 int y = e.getY();
                 //System.out.println("x: " + x + " y: " + y);
-                float drop_right = bomb_left + bomb.getWidth(null);
-                float drop_bottom = bomb_top + bomb.getHeight(null);
-                boolean is_drop = x >= bomb_left && x <= drop_right && y >= bomb_top && y <= drop_bottom;
-                if (is_drop){
-                    isExplosion = true;
-                    Sound.playExplosion();
+
+                for (int i = 0; i < bombs.length; i++) {
+                    boolean is_drop = x >= bombs[i].getBomb_left() && x <= bombs[i].getBomb_right() && y >= bombs[i].getBomb_top() && y <= bombs[i].getBomb_bottom();
+                    if (is_drop){
+                        bombs[i].setExplosion(true);
+                        Sound.playExplosion();
+                        score++;
+                    }
                 }
-                score++;
             }
         });
     }
 
     @Override
     protected void paintComponent(Graphics g){
-        if (score >= 10){
-            g.drawImage(game_success, 0, 0, null);
-            Sound.playWin();
-        } else if (bomb_top > 768) {
-            g.drawImage(game_over, 0, 0, null);
-            Sound.playLaughter();
-        } else {
-            bomb_top += 5; // drop_top = drop_top + 5;
-            g.drawImage(background, 0, 0, null);
-            g.drawImage(bomb, bomb_left, bomb_top, null);
-            if (isExplosion) {
-                g.drawImage(explosion, bomb_left, bomb_top, null);
-            }
-
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            repaint();
-
-            if (isExplosion) {
-                isExplosion = false;
-                bomb_top = -100;
-                bomb_left = (int) (Math.random() * (getWidth() - bomb.getWidth(null)));
+        g.drawImage(background, 0, 0, null);
+        for (int i = 0; i < bombs.length; i++) {
+            if (score >= 50){
+                g.drawImage(game_success, 0, 0, null);
+                if (!isSound) {
+                    Sound.playWin();
+                    isSound = true;
+                }
+                break;
+            } else if (bombs[i].getBomb_top() > 768) {
+                g.drawImage(game_over, 0, 0, null);
+                if (!isSound) {
+                    Sound.playLost();
+                    isSound = true;
+                }
+                break;
+            } else {
+                bombs[i].setBomb_top(bombs[i].getBomb_top() + 5);
+                bombs[i].setBomb_bottom(bombs[i].getBomb_top() + bombs[i].getBomb().getHeight(null));
+                g.drawImage(bombs[i].getBomb(), bombs[i].getBomb_left(), bombs[i].getBomb_top(), null);
+                if (bombs[i].isExplosion()) {
+                    g.drawImage(explosion, bombs[i].getBomb_left(), bombs[i].getBomb_top(), null);
+                }
+                if (bombs[i].isExplosion()) {
+                    bombs[i] = new Bomb(bombs[i].getBomb());
+                }
             }
         }
+
+        try {
+            Thread.sleep(30);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        repaint();
     }
 }
