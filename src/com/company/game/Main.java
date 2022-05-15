@@ -9,9 +9,9 @@ public class Main {
         // Сперва создается панель
         MyPanel panel = new MyPanel();
         // Затем окно
-        new GameWindow(panel);
+        GameWindow gameWindow = new GameWindow(panel);
         // Запускаем звуковую дорожку
-        Sound.playLaughter();
+        // Sound.playLaughter();
     }
 
 

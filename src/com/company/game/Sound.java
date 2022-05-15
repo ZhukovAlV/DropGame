@@ -20,4 +20,18 @@ public class Sound {
         }).start();
     }
 
+    public static synchronized void playWin() {
+        new Thread(() -> {
+            try {
+                Clip clip = AudioSystem.getClip();
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+                        Main.class.getResourceAsStream("winning.wav"));
+                clip.open(inputStream);
+                clip.start();
+            } catch (Exception e) {
+                System.out.println("Файл winning.wav не найден");
+            }
+        }).start();
+    }
+
 }
